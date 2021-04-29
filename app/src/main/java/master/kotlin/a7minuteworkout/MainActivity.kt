@@ -8,19 +8,29 @@ import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
+import master.kotlin.a7minuteworkout.databinding.ActivityMainBinding
 import java.util.*
+import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
     companion object{
         var tts:TextToSpeech? = null
     }
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         tts = TextToSpeech(this, this)
-        var llStart = findViewById<LinearLayout>(R.id.llStart)
-        llStart.setOnClickListener {
+
+        binding.llStart.setOnClickListener {
             val intent = Intent(this, ExerciseActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.llBMI.setOnClickListener {
+            val intent = Intent(this, BMIActivity::class.java)
             startActivity(intent)
         }
     }

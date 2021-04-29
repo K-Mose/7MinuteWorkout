@@ -4,24 +4,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
+import master.kotlin.a7minuteworkout.databinding.ActivityFinishBinding
 
 class FinishActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val binding = ActivityFinishBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_finish)
-        val toolbarFinishActivity = findViewById<Toolbar>(R.id.toolbar_finish_activity)
-        setSupportActionBar(toolbarFinishActivity)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbarFinishActivity)
         val actionbar = supportActionBar
-        if(actionbar != null){
-            actionbar.setDisplayHomeAsUpEnabled(true)
+        actionbar?.apply{
+            setDisplayHomeAsUpEnabled(true)
         }
 
-        toolbarFinishActivity.setNavigationOnClickListener {
+        binding.toolbarFinishActivity.setNavigationOnClickListener {
             onBackPressed()
         }
 
-        val btnFinish:Button = findViewById(R.id.btnFinish)
-        btnFinish.setOnClickListener {
+        binding.btnFinish.setOnClickListener {
             finish()
         }
     }
