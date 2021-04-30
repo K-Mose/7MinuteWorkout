@@ -24,15 +24,20 @@ class MainActivity : AppCompatActivity(),TextToSpeech.OnInitListener {
         setContentView(view)
         tts = TextToSpeech(this, this)
 
-        binding.llStart.setOnClickListener {
-            val intent = Intent(this, ExerciseActivity::class.java)
-            startActivity(intent)
+        binding.let {
+            it.llStart.setOnClickListener {
+                startActivity(Intent(this, ExerciseActivity::class.java))
+            }
+
+            it.llBMI.setOnClickListener {
+                startActivity(Intent(this, BMIActivity::class.java))
+            }
+
+            it.llHistory.setOnClickListener {
+                startActivity(Intent(this, HistoryActivity::class.java))
+            }
         }
 
-        binding.llBMI.setOnClickListener {
-            val intent = Intent(this, BMIActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     override fun onInit(status: Int) {
