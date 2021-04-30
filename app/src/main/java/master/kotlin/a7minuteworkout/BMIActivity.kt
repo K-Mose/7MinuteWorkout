@@ -42,19 +42,36 @@ class BMIActivity : AppCompatActivity() {
                 onBackPressed()
             }
             btnCalculateUnits.setOnClickListener {
-                if(validateMetricUnits()){
-                    val heightValue: Float = binding.etMetricUnitHeight.text.toString().toFloat() / 100
-                    val weightValue: Float = binding.etMetricUnitWeight.text.toString().toFloat()
+                if(currentVisibleView == METRIC_UNITS_VIEW){
+                    if(validateMetricUnits()){
+                        val heightValue: Float = etMetricUnitHeight.text.toString().toFloat() / 100
+                        val weightValue: Float = etMetricUnitWeight.text.toString().toFloat()
 
-                    val bmi = weightValue / (heightValue * heightValue)
-                    displayBMIResult(bmi)
+                        val bmi = weightValue / (heightValue * heightValue)
+                        displayBMIResult(bmi)
+                    }else{
+                        Toast.makeText(this@BMIActivity, "Please enter valid values.", Toast.LENGTH_SHORT).show()
+                    }
                 }else{
-                    Toast.makeText(this@BMIActivity, "Please enter valid values.", Toast.LENGTH_SHORT).show()
+                    if(validateUsUnits()){
+                        val heightValueFeet: Float = etUsUnitFeet.text.toString().toFloat()
+                        val heightValueInch: Float = etUsUnitInch.text.toString().toFloat()
+                        val weightValue: Float = etUsUnitWeight.text.toString().toFloat()
+                        val heightValue: Float = heightValueInch + heightValueFeet * 12
+                        val bmi = 703 * weightValue / (heightValue * heightValue)
+                        displayBMIResult(bmi)
+                    }else{
+                        Toast.makeText(this@BMIActivity, "Please enter valid values.", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
     }
 
+    /*
+    invisible - 보이지는 않지만 공간은 차지하고 있음
+    gone - 보이지도 않고 공간도 없음
+     */
     private fun makeVisibleUsUnitsView(){
         currentVisibleView = US_UNITS_VIEW
         binding.apply {
@@ -116,6 +133,12 @@ class BMIActivity : AppCompatActivity() {
     private fun validateMetricUnits(): Boolean{
         var isValid = true
         if(binding.etMetricUnitHeight.text.toString().isEmpty() || (binding.etMetricUnitWeight.text.toString().isEmpty()))
+            isValid = false
+        return isValid
+    }
+    private fun validateUsUnits(): Boolean{
+        var isValid = true
+        if((binding.etUsUnitInch.text.toString().isEmpty()) || (binding.etUsUnitFeet.text.toString().isEmpty()) || (binding.etUsUnitWeight.text.toString().isEmpty()))
             isValid = false
         return isValid
     }
