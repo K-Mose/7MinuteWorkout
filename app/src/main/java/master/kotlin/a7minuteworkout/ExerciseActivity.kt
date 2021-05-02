@@ -25,11 +25,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var tts:TextToSpeech? = null
     private var restTimer:CountDownTimer? = null
     private var restProgress = 0
-    private var restTimerDuration:Long = 1
+    private var restTimerDuration:Long = 10
 
     private var exerciseTimer:CountDownTimer? = null
     private var exerciseProgress = 0
-    private var exerciseTimerDuration:Long = 1
+    private var exerciseTimerDuration:Long = 30
 
     private var exerciseList:ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
@@ -110,7 +110,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         restTimer = object:CountDownTimer(restTimerDuration*1000, 1000){
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++
-                binding.progressBar.progress = restProgress-restProgress
+                binding.progressBar.progress = restTimerDuration.toInt()-restProgress
                 binding.tvTimer.text = (restTimerDuration-restProgress).toString()
             }
             override fun onFinish() {
@@ -183,7 +183,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding.llExerciseView.visibility = View.GONE
         if(restTimer != null){
             restTimer!!.cancel()
-            restProgress = 0
+            restProgress = 10
         }
 
         binding.tvUpcomingExerciseName.text = exerciseList!![currentExercisePosition+1].getName()
@@ -193,11 +193,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // 현재 어느 운동인지 보여주는 RecyclerView setup 함수
     private fun setupExerciseStatusRecyclerView(){
-        val rvExerciseStatus = findViewById<RecyclerView>(R.id.rvExerciseStatus)
-        rvExerciseStatus.layoutManager =
-                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!, this)
-        rvExerciseStatus.adapter = exerciseAdapter
+        binding.apply {
+            rvExerciseStatus.layoutManager =
+                    LinearLayoutManager(this@ExerciseActivity, LinearLayoutManager.HORIZONTAL, false)
+            exerciseAdapter = ExerciseStatusAdapter(exerciseList!!, this@ExerciseActivity)
+            rvExerciseStatus.adapter = exerciseAdapter
+        }
     }
 
     private fun customDialogForBackButton(){
