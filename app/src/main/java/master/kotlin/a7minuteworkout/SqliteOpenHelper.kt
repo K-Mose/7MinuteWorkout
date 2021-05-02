@@ -1,0 +1,57 @@
+package master.kotlin.a7minuteworkout
+
+import android.content.ContentValues
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+
+class SqliteOpenHelper(context: Context, factory: SQLiteDatabase.CursorFactory?)
+    : SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
+
+    // 기본 DB 정보 static으로
+    companion object{
+        private val DATABASE_VERSION = 1
+        private val DATABASE_NAME = "SevenMinutesWorkout.db"
+        private val TABLE_HISTORY = "histroy"
+        private val COLUMN_ID = "_id" // col 1
+        private val COLUMN_COMPLETED_DATE = "completed_date" // col 2
+    }
+
+    override fun onCreate(db: SQLiteDatabase?) {
+        val CREATE_EXERCISE_TABLE = ("CREATE TABLE " + TABLE_HISTORY + "(" +
+                COLUMN_ID + " INTEGER PRIMERY KEY, " +
+                COLUMN_COMPLETED_DATE + " TEXT)")
+        db?.execSQL(CREATE_EXERCISE_TABLE)
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        // 기존 DB 지우고 새 DB 생성 - 업그레이드
+        db?.execSQL("DROP TABLE IF EXISTS" + TABLE_HISTORY)
+        onCreate(db)
+    }
+
+    // writeable과 readable는 SQLiteOpenHelper 안에 있는 메서드
+    // DB에 쓸 때 - this.writableDatabase
+    //    읽을 때 - this.readableDatabase
+    fun addDate(date: String){
+        // ContentValues 객체가 값들을 DB에 넣어준다.
+        val values = ContentValues()
+        values.put(COLUMN_COMPLETED_DATE, date)
+        val db = this.writableDatabase
+        db.insert(TABLE_HISTORY, null, values)
+        db.close()
+    }
+
+    fun getAllCompletedDatesList() : ArrayList<String>{
+        val list = ArrayList<String>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("select * from $TABLE_HISTORY", null)
+        while (cursor.moveToNext()){
+            val dateValue = (cursor.getString(cursor.getColumnIndex(COLUMN_COMPLETED_DATE)))
+            list.add(dateValue)
+        }
+        cursor.close()
+        db.close()
+        return list
+    }
+}
